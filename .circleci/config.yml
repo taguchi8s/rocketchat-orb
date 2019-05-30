@@ -1,0 +1,34 @@
+version: 2.1
+
+orbs:
+  rocketchat-orb: taguchi8s/rocketchat-orb@0.0.1
+
+jobs:
+    build:
+        docker:
+        - image: bash
+        steps:
+        - run: "echo 'testing building...'"
+        - rocketchat-orb/hello:
+            username: "taguchi8s"
+    dev:
+        docker:
+        - image: circleci/circleci-cli
+        steps:
+        - checkout
+        - run:
+            name: publich dev
+            command: "circleci orb publish src/orb.yml taguchi8s/rocketchat-orb@dev:first"
+    patch:
+        docker:
+        - image: circleci/circleci-cli
+        steps:
+        - checkout
+        - run:
+            name: publich patch 
+            command: "circleci orb publish promote taguchi8s/rocketchat-orb@dev:first patch"
+
+workflows:
+    main:
+        jobs:
+        - build
